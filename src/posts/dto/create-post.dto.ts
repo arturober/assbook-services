@@ -4,6 +4,8 @@ import {
   IsNumber,
   IsOptional,
   Allow,
+  Min, 
+  Max,
 } from 'class-validator';
 import { User } from '../../users/entities/user.entity';
 
@@ -31,6 +33,11 @@ export class CreatePostDto {
   @IsOptional()
   @IsNumber()
   lng: number;
+
+  @IsNumber()
+  @Min(0)
+  @Max(2)
+  mood: number;
 
   @Allow()
   creator: User;

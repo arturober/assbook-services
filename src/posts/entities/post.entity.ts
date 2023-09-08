@@ -34,6 +34,9 @@ export class Post {
   @Property({ columnType: 'double', default: 0 })
   lng!: number;
 
+  @Property({ columnType: 'tinyint', default: 0 })
+  mood: number;
+
   @Property({ default: 0 })
   totalLikes?: number;
 
