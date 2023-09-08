@@ -6,7 +6,7 @@ import appConfig from './app.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
-  app.use('/img', express.static('img'));
+  app.use('/img', express.static(appConfig().basePath + 'img'));
   app.use(express.json({ limit: '10mb' }));
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.setGlobalPrefix(
