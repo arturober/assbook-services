@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: localhost
--- Tiempo de generación: 07-09-2023 a las 23:02:46
--- Versión del servidor: 10.4.28-MariaDB
--- Versión de PHP: 8.2.4
+-- Servidor: mariadb
+-- Tiempo de generación: 08-09-2023 a las 13:28:16
+-- Versión del servidor: 10.11.4-MariaDB
+-- Versión de PHP: 8.2.9
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -52,6 +52,7 @@ CREATE TABLE `post` (
   `place` varchar(100) DEFAULT NULL,
   `lat` float DEFAULT NULL,
   `lng` float DEFAULT NULL,
+  `mood` tinyint(4) NOT NULL DEFAULT 0,
   `total_likes` int(11) NOT NULL DEFAULT 0,
   `creator` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -71,7 +72,7 @@ CREATE TABLE `user` (
   `lat` double(9,6) NOT NULL DEFAULT 0.000000,
   `lng` double(9,6) NOT NULL DEFAULT 0.000000,
   `firebase_token` varchar(200) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
