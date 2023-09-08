@@ -7,6 +7,7 @@ import {
 } from '@mikro-orm/core';
 import { User } from '../../users/entities/user.entity';
 import { CreatePostDto } from '../dto/create-post.dto';
+import { LikePostDto } from '../dto/like-post.dto';
 
 @Entity()
 export class Post {
@@ -44,7 +45,7 @@ export class Post {
   mine?: boolean;
 
   @Property({ persist: false })
-  voted?: boolean;
+  voted?: LikePostDto;
 
   @ManyToOne({
     entity: () => User,

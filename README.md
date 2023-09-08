@@ -518,7 +518,7 @@ Responde simplemente con una confirmación si todo ha ido bien:
 }
 ```
 
-<!-- * **GET /users/me/followers**
+* **GET /users/me/followers**
 
 Devuelve los usuarios que te siguen:
 
@@ -528,15 +528,13 @@ Devuelve los usuarios que te siguen:
         {
             "id": 1,
             "name": "John",
-            "email": "email@email.com",
-            "avatar": "http://localhost:3000/img/users/1571767279934.jpg",
-            "oneSignalId": null,
-            "followersCount": 0,
-            "followingCount": 1
-        },
-        ...
+            "email": "test@test.com",
+            "avatar": "http://localhost:3000/img/users/1693734478366.jpg",
+            "lat": 37.423553,
+            "lng": -0.654657
+        }
     ],
-    "count": 3
+    "followerCount": 1
 }
 ```
 
@@ -546,34 +544,50 @@ Devuelve los usuarios a los que sigues:
 
 ```json
 {
-    "following": [
+    "followed": [
         {
-            "id": 2,
-            "name": "Test User 2",
-            "email": "test2@test.com",
-            "avatar": "http://localhost:3000/img/users/1571756211995.jpg",
-            "oneSignalId": null,
-            "followersCount": 3,
-            "followingCount": 1
+            "id": 1,
+            "name": "John",
+            "email": "test@test.com",
+            "avatar": "http://localhost:3000/img/users/1693734478366.jpg",
+            "lat": 37.423553,
+            "lng": -0.654657
         }
     ],
-    "count": 1
+    "followedCount": 1
 }
 ```
 
-* **POST /users/follow**
+* **POST /users/:id/follow**
 
-Este servicio es para empezar a seguir a un usuario. Se ha de enviar la id de dicho usuario:
+Este servicio es para empezar a seguir a un usuario. Se ha de enviar la id de dicho usuario en la URL:
 
 ```json
 {
-	"id": 2
+    "following": {
+        "follower": {
+            "id": 1,
+            "name": "John",
+            "email": "test@test.com",
+            "avatar": "http://localhost:3000/img/users/1693734478366.jpg",
+            "lat": 37.423553,
+            "lng": -0.654657
+        },
+        "followed": {
+            "id": 1,
+            "name": "John",
+            "email": "test@test.com",
+            "avatar": "http://localhost:3000/img/users/1693734478366.jpg",
+            "lat": 37.423553,
+            "lng": -0.654657
+        }
+    }
 }
 ```
 
 El servidor responderá con la misma id si todo ha ido bien
 
-* **DELETE /users/follow/:id**
+* **DELETE /users/:id/follow**
 
-Deja de seguir a un usuario. El servidor devuelve la id del usuario que has dejado de seguir. -->
+Deja de seguir a un usuario. El servidor devuelve la id del usuario que has dejado de seguir.
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/core';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -6,12 +6,15 @@ import { UpdatePasswordDto } from './dto/update-password.dto';
 import { UpdatePhotoDto } from './dto/update-photo.dto';
 import { ImageService } from 'src/commons/image/image.service';
 import { User } from './entities/user.entity';
+import { UserFollow } from './entities/user-follow.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly imageService: ImageService,
     @InjectRepository(User) private readonly usersRepo: EntityRepository<User>,
+    @InjectRepository(UserFollow)
+    private readonly userFollowRepo: EntityRepository<UserFollow>,
   ) {}
 
   async getUser(id: number): Promise<User> {
@@ -45,5 +48,61 @@ export class UsersService {
     );
     await this.usersRepo.nativeUpdate(id, photoDto);
     return photoDto.avatar;
+  }
+
+  async getFollowed(id: number) {
+    const follows = await this.userFollowRepo.findAndCount(
+      { follower: { id } },
+      { populate: ['followed'] },
+    );
+    return {
+      followed: follows[0].map((f) => f.followed),
+      followedCount: follows[1],
+    };
+  }
+
+  async getFollowers(id: number) {
+    const follows = await this.userFollowRepo.findAndCount(
+      { followed: { id } },
+      { populate: ['follower'] },
+    );
+    return {
+      followers: follows[0].map((f) => f.follower),
+      followerCount: follows[1],
+    };
+  }
+
+  async follow(id: number, loggedUser: User) {
+    const followed = await this.usersRepo.findOne(id);
+    if (!followed) {
+      throw new NotFoundException({
+        status: 404,
+        error: 'User not found',
+      });
+    }
+    let userFollow = await this.userFollowRepo.findOne(
+      {
+        follower: loggedUser,
+        followed,
+      },
+      { populate: ['follower', 'followed'] },
+    );
+    if (!userFollow) {
+      userFollow = new UserFollow();
+      userFollow.follower = loggedUser;
+      userFollow.followed = followed;
+      await this.userFollowRepo.getEntityManager().persistAndFlush(userFollow);
+    }
+    return userFollow;
+  }
+
+  async unfollow(id: number, loggedUser: User) {
+    const userFollow = await this.userFollowRepo.findOne({
+      follower: loggedUser,
+      followed: { id },
+    });
+    if (userFollow) {
+      await this.userFollowRepo.getEntityManager().removeAndFlush(userFollow);
+    }
   }
 }

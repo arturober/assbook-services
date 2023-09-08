@@ -12,6 +12,8 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor,
   HttpCode,
+  Post,
+  Delete,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -103,5 +105,32 @@ export class UsersController {
     } catch (e) {
       throw new NotFoundException();
     }
+  }
+
+  @Get('me/followers')
+  @UseInterceptors(UserResponseInterceptor, ClassSerializerInterceptor)
+  async getMyFollowers(@AuthUser() authUser: User) {
+    return await this.usersService.getFollowers(authUser.id);
+  }
+
+  @Get('me/following')
+  @UseInterceptors(UserResponseInterceptor, ClassSerializerInterceptor)
+  async getMyFollowing(@AuthUser() authUser: User) {
+    return await this.usersService.getFollowed(authUser.id);
+  }
+
+  @Post(':id/follow')
+  @UseInterceptors(UserResponseInterceptor, ClassSerializerInterceptor)
+  async follow(
+    @AuthUser() authUser: User,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return { following: await this.usersService.follow(id, authUser) };
+  }
+
+  @Delete(':id/follow')
+  @HttpCode(204)
+  async unfollow(@Req() req, @Param('id', ParseIntPipe) id: number) {
+    await this.usersService.unfollow(id, req.user);
   }
 }

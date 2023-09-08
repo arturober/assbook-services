@@ -32,7 +32,7 @@ export class PostsService {
       .leftJoinAndSelect('p.creator', 'c')
       .addSelect(`c.id = ${+authUser.id} AS mine`)
       .addSelect(
-        `EXISTS (SELECT user FROM user_like_post WHERE user = ${+authUser.id} AND post = p.id) AS voted`,
+        `(SELECT likes FROM user_like_post WHERE user = ${+authUser.id} AND post = p.id) AS voted`,
       );
   }
 
@@ -46,7 +46,7 @@ export class PostsService {
     if (authUser.id != post.creator.id) {
       throw new ForbiddenException({
         status: 403,
-        error: "This restaurant doesn't belong to you. You can't delete it",
+        error: "This post doesn't belong to you. You can't delete it",
       });
     }
   }
@@ -91,7 +91,7 @@ export class PostsService {
 
     await this.postRepo.getEntityManager().persistAndFlush(post);
     post.mine = true;
-    post.voted = false;
+    post.voted = null;
     return post;
   }
 
