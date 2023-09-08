@@ -9,6 +9,9 @@ async function bootstrap() {
   app.use('/img', express.static('img'));
   app.use(express.json({ limit: '10mb' }));
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
+  app.setGlobalPrefix(
+    appConfig().basePath ? appConfig().basePath.slice(0, -1) : '',
+  );
   await app.listen(appConfig().port);
 }
 bootstrap();
