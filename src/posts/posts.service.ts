@@ -52,12 +52,15 @@ export class PostsService {
   }
 
   findAll(authUser: User) {
-    return this.createPostSelect(authUser).getResultList();
+    return this.createPostSelect(authUser)
+      .orderBy({ date: 'DESC' })
+      .getResultList();
   }
 
   findByCreator(idUser: number, authUser: User) {
     return this.createPostSelect(authUser)
       .where({ creator: { id: idUser } })
+      .orderBy({ date: 'DESC' })
       .getResultList();
   }
 
