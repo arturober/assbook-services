@@ -23,10 +23,14 @@ import { AuthUser } from 'src/auth/decorators/user.decorator';
 import { UserResponseInterceptor } from './interceptors/user-response.interceptor';
 import { Request } from 'express';
 import { User } from './entities/user.entity';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private configService: ConfigService,
+  ) {}
 
   @Get('me')
   @UseInterceptors(UserResponseInterceptor, ClassSerializerInterceptor)
@@ -101,7 +105,15 @@ export class UsersController {
   ) {
     try {
       const avatar = await this.usersService.updatePhoto(authUser.id, photoDto);
-      return { avatar: req.protocol + '://' + req.headers.host + '/' + avatar };
+      return {
+        avatar:
+          req.protocol +
+          '://' +
+          req.headers.host +
+          '/' +
+          this.configService.get<string>('basePath') +
+          avatar,
+      };
     } catch (e) {
       throw new NotFoundException();
     }
