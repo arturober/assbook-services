@@ -18,8 +18,8 @@ export class CommentResponseInterceptor implements NestInterceptor {
       map((data: Comment | Comment[]) => {
         if (Array.isArray(data)) {
           return {
-            comments: data.map((p) => {
-              return this.transformImageUrl(req, p);
+            comments: data.map((c) => {
+              return this.transformImageUrl(req, c);
             }),
           };
         } else {
@@ -33,7 +33,11 @@ export class CommentResponseInterceptor implements NestInterceptor {
     const baseUrl = `${req.protocol}://${
       req.headers.host
     }/${this.configService.get<string>('basePath')}`;
-    if (comment.user && comment.user.avatar) {
+    if (
+      comment.user &&
+      comment.user.avatar &&
+      !comment.user.avatar.startsWith('http')
+    ) {
       comment.user.avatar = baseUrl + comment.user.avatar;
     }
 
