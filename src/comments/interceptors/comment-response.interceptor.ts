@@ -4,46 +4,39 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
-import { Observable, map } from 'rxjs';
-import { Post } from '../entities/post.entity';
 import { ConfigService } from '@nestjs/config';
+import { Observable, map } from 'rxjs';
+import { Comment } from '../entities/comment.entity';
 
 @Injectable()
-export class PostResponseInterceptor implements NestInterceptor {
+export class CommentResponseInterceptor implements NestInterceptor {
   constructor(private configService: ConfigService) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const req = context.switchToHttp().getRequest();
     return next.handle().pipe(
-      map((data: Post | Post[]) => {
+      map((data: Comment | Comment[]) => {
         if (Array.isArray(data)) {
           return {
-            posts: data.map((p) => {
+            comments: data.map((p) => {
               return this.transformImageUrl(req, p);
             }),
           };
         } else {
-          return { post: this.transformImageUrl(req, data) };
+          return { comment: this.transformImageUrl(req, data) };
         }
       }),
     );
   }
 
-  private transformImageUrl(req, post: Post) {
+  private transformImageUrl(req, comment: Comment) {
     const baseUrl = `${req.protocol}://${
       req.headers.host
     }/${this.configService.get<string>('basePath')}`;
-    if (post.image) {
-      post.image = baseUrl + post.image;
-    }
-    if (
-      post.creator &&
-      post.creator.avatar &&
-      !post.creator.avatar.startsWith('http')
-    ) {
-      post.creator.avatar = baseUrl + post.creator.avatar;
+    if (comment.user && comment.user.avatar) {
+      comment.user.avatar = baseUrl + comment.user.avatar;
     }
 
-    return post;
+    return comment;
   }
 }

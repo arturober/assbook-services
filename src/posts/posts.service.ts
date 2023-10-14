@@ -32,7 +32,7 @@ export class PostsService {
       .leftJoinAndSelect('p.creator', 'c')
       .addSelect(`c.id = ${+authUser.id} AS mine`)
       .addSelect(
-        `(SELECT likes FROM user_like_post WHERE user = ${+authUser.id} AND post = p.id) AS voted`,
+        `(SELECT likes FROM user_like_post WHERE user = ${+authUser.id} AND post = p.id) AS likes`,
       );
   }
 
@@ -94,7 +94,7 @@ export class PostsService {
 
     await this.postRepo.getEntityManager().persistAndFlush(post);
     post.mine = true;
-    post.voted = null;
+    post.likes = null;
     return post;
   }
 

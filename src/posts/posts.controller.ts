@@ -20,6 +20,7 @@ import { PostResponseInterceptor } from './interceptors/post-response.intercepto
 import { PostsService } from './posts.service';
 import { CommentsService } from 'src/comments/comments.service';
 import { CreateCommentDto } from 'src/comments/dto/create-comment.dto';
+import { CommentResponseInterceptor } from 'src/comments/interceptors/comment-response.interceptor';
 
 @Controller('posts')
 export class PostsController {
@@ -111,19 +112,19 @@ export class PostsController {
   }
 
   @Get(':id/comments')
-  async getComments(@Param('id', ParseIntPipe) postId: number) {
-    return { comments: await this.commentsService.findByPost(postId) };
+  @UseInterceptors(CommentResponseInterceptor)
+  getComments(@Param('id', ParseIntPipe) postId: number) {
+    return this.commentsService.findByPost(postId);
   }
 
   @Post(':id/comments')
-  async postComment(
+  @UseInterceptors(CommentResponseInterceptor)
+  postComment(
     @Param('id', ParseIntPipe) postId: number,
     @Body(new ValidationPipe({ transform: true, whitelist: true }))
     comDto: CreateCommentDto,
     @AuthUser() authUser: User,
   ) {
-    return {
-      comments: await this.commentsService.create(comDto, postId, authUser),
-    };
+    return this.commentsService.create(comDto, postId, authUser);
   }
 }
