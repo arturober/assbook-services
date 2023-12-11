@@ -6,7 +6,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { CommentsModule } from './comments/comments.module';
-import { GOOGLE_ID_VALUE } from './google-id';
 import mikroOrmConfig from './mikro-orm.config';
 import { PostsModule } from './posts/posts.module';
 import { UsersModule } from './users/users.module';
@@ -19,7 +18,7 @@ import { UsersModule } from './users/users.module';
     UsersModule,
     CommentsModule,
     AuthModule.forRoot({
-      googleId: GOOGLE_ID_VALUE,
+      googleId: configuration().google_id,
     }),
   ],
   controllers: [AppController],

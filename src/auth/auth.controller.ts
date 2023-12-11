@@ -79,7 +79,7 @@ export class AuthController {
         status: HttpStatus.UNAUTHORIZED,
         error:
           e.name === 'StatusCodeError'
-            ? e.error.error.message
+            ? e.error.message
             : 'Facebook login failed',
       });
     }
