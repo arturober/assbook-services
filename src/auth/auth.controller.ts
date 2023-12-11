@@ -77,10 +77,7 @@ export class AuthController {
     } catch (e) {
       throw new UnauthorizedException({
         status: HttpStatus.UNAUTHORIZED,
-        error:
-          e.name === 'StatusCodeError'
-            ? e.error.message
-            : 'Facebook login failed',
+        error: e.name === 'StatusCodeError' ? e : 'Facebook login failed',
       });
     }
   }
