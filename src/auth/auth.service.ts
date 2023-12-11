@@ -110,10 +110,13 @@ export class AuthService {
     if (!user) {
       const optionsImg = {
         method: 'GET',
-        uri: 'https://graph.facebook.com/me/picture',
+        uri: 'https://graph.facebook.com/' + respUser.id + '/picture',
         qs: {
           access_token: tokenDto.token,
           type: 'large',
+          redirect: true,
+          width: 200,
+          height: 200,
         },
         encoding: null,
       };
