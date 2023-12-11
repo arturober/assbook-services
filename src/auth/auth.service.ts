@@ -112,7 +112,7 @@ export class AuthService {
         method: 'GET',
         uri: 'https://graph.facebook.com/' + respUser.id + '/picture',
         qs: {
-          access_token: tokenDto.token,
+          // access_token: tokenDto.token,
           type: 'large',
           redirect: true,
           width: 200,
