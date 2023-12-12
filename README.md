@@ -560,34 +560,25 @@ Devuelve los usuarios a los que sigues:
 
 * **POST /users/:id/follow**
 
-Este servicio es para empezar a seguir a un usuario. Se ha de enviar la id de dicho usuario en la URL:
+Este servicio te indica si estás actualmente siguiendo al usuario cuya id le pasas en la url.
+
+El servidor devuelve lo siguiente (**true**: le sigues, **false**: no le sigues):
 
 ```json
 {
-    "following": {
-        "follower": {
-            "id": 1,
-            "name": "John",
-            "email": "test@test.com",
-            "avatar": "http://localhost:3000/img/users/1693734478366.jpg",
-            "lat": 37.423553,
-            "lng": -0.654657
-        },
-        "followed": {
-            "id": 1,
-            "name": "John",
-            "email": "test@test.com",
-            "avatar": "http://localhost:3000/img/users/1693734478366.jpg",
-            "lat": 37.423553,
-            "lng": -0.654657
-        }
-    }
+    "following": true
 }
 ```
 
-El servidor responderá con la misma id si todo ha ido bien
+* **POST /users/:id/follow**
+
+Este servicio es para empezar a seguir a un usuario. Se ha de enviar la id de dicho usuario en la URL
+
+El servidor devuelve una respuesta vacía o un error, por ejemplo 404 si el usuario no existe
 
 * **DELETE /users/:id/follow**
 
 Deja de seguir a un usuario. El servidor devuelve la id del usuario que has dejado de seguir.
+
+El servidor devuelve una respuesta vacía o un error si algo falla
 
