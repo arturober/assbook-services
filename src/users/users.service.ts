@@ -72,6 +72,15 @@ export class UsersService {
     };
   }
 
+  async isFollowing(id: number, loggedUser: User) {
+    const userFollow = await this.userFollowRepo.findOne({
+      follower: loggedUser,
+      followed: { id },
+    });
+
+    return { following: !!userFollow };
+  }
+
   async follow(id: number, loggedUser: User) {
     const followed = await this.usersRepo.findOne(id);
     if (!followed) {
@@ -93,7 +102,6 @@ export class UsersService {
       userFollow.followed = followed;
       await this.userFollowRepo.getEntityManager().persistAndFlush(userFollow);
     }
-    return userFollow;
   }
 
   async unfollow(id: number, loggedUser: User) {

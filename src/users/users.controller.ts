@@ -131,13 +131,22 @@ export class UsersController {
     return await this.usersService.getFollowed(authUser.id);
   }
 
+  @Get(':id/follow')
+  @UseInterceptors(UserResponseInterceptor, ClassSerializerInterceptor)
+  async isFollowing(
+    @AuthUser() authUser: User,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return await this.usersService.isFollowing(id, authUser);
+  }
+
   @Post(':id/follow')
   @UseInterceptors(UserResponseInterceptor, ClassSerializerInterceptor)
   async follow(
     @AuthUser() authUser: User,
     @Param('id', ParseIntPipe) id: number,
   ) {
-    return { following: await this.usersService.follow(id, authUser) };
+    await this.usersService.follow(id, authUser);
   }
 
   @Delete(':id/follow')
