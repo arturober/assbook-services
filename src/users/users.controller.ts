@@ -132,7 +132,6 @@ export class UsersController {
   }
 
   @Get(':id/follow')
-  @UseInterceptors(UserResponseInterceptor, ClassSerializerInterceptor)
   async isFollowing(
     @AuthUser() authUser: User,
     @Param('id', ParseIntPipe) id: number,
@@ -141,7 +140,6 @@ export class UsersController {
   }
 
   @Post(':id/follow')
-  @UseInterceptors(UserResponseInterceptor, ClassSerializerInterceptor)
   async follow(
     @AuthUser() authUser: User,
     @Param('id', ParseIntPipe) id: number,
