@@ -4,7 +4,7 @@ import {
   IsNumber,
   IsOptional,
   Allow,
-  Min, 
+  Min,
   Max,
 } from 'class-validator';
 import { User } from '../../users/entities/user.entity';

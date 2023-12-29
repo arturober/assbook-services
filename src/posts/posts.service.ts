@@ -118,6 +118,7 @@ export class PostsService {
     post.place = updatePostDto.place;
     post.title = updatePostDto.title;
     post.description = updatePostDto.description;
+    post.mood = updatePostDto.mood;
     this.postRepo.getEntityManager().flush();
     return post;
   }
