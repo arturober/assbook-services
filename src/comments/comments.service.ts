@@ -24,8 +24,10 @@ export class CommentsService {
   ) {
     const comment = new Comment();
     comment.text = createCommentDto.text;
-    const post = await this.postRepo.findOne(idPost, { populate: ['creator'] });
-    if (!post) {
+    comment.post = await this.postRepo.findOne(idPost, {
+      populate: ['creator'],
+    });
+    if (!comment.post) {
       throw new NotFoundException({
         status: 404,
         error: 'Post not found',
@@ -34,9 +36,9 @@ export class CommentsService {
     comment.user = authUser;
     await this.comRepo.getEntityManager().persistAndFlush(comment);
 
-    if (post.creator.firebaseToken) {
+    if (comment.post.creator.firebaseToken) {
       await this.firebaseService.sendMessage(
-        post.creator.firebaseToken,
+        comment.post.creator.firebaseToken,
         `${authUser.name} has commented`,
         comment.text,
         { id: '' + idPost },
