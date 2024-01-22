@@ -5,6 +5,7 @@ import { FirebaseService } from './firebase/firebase.service';
 @Module({
   providers: [
     ImageService,
+    FirebaseService,
     {
       provide: 'BING_TOKEN',
       useValue:
