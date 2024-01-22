@@ -2,7 +2,11 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as express from 'express';
 import { useContainer } from 'class-validator';
+import * as admin from 'firebase-admin';
 import appConfig from './app.config';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const serviceAccount = require('../firebase/firebase_key.json');
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
@@ -15,6 +19,9 @@ async function bootstrap() {
   app.setGlobalPrefix(
     appConfig().basePath ? appConfig().basePath.slice(0, -1) : '',
   );
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+  });
   await app.listen(appConfig().port);
 }
 bootstrap();

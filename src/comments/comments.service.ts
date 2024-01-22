@@ -5,6 +5,7 @@ import { Post } from 'src/posts/entities/post.entity';
 import { User } from 'src/users/entities/user.entity';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { Comment } from './entities/comment.entity';
+import { FirebaseService } from 'src/commons/firebase/firebase.service';
 
 @Injectable()
 export class CommentsService {
@@ -13,6 +14,7 @@ export class CommentsService {
     private readonly comRepo: EntityRepository<Comment>,
     @InjectRepository(User) private readonly usersRepo: EntityRepository<User>,
     @InjectRepository(Post) private readonly postRepo: EntityRepository<Post>,
+    private readonly firebaseService: FirebaseService,
   ) {}
 
   async create(
@@ -22,8 +24,8 @@ export class CommentsService {
   ) {
     const comment = new Comment();
     comment.text = createCommentDto.text;
-    comment.post = await this.postRepo.findOne(idPost);
-    if (!comment.post) {
+    const post = await this.postRepo.findOne(idPost, { populate: ['creator'] });
+    if (!post) {
       throw new NotFoundException({
         status: 404,
         error: 'Post not found',
@@ -31,6 +33,16 @@ export class CommentsService {
     }
     comment.user = authUser;
     await this.comRepo.getEntityManager().persistAndFlush(comment);
+
+    if (post.creator.firebaseToken) {
+      await this.firebaseService.sendMessage(
+        post.creator.firebaseToken,
+        `${authUser.name} has commented`,
+        comment.text,
+        { id: '' + idPost },
+      );
+    }
+
     return comment;
   }
 

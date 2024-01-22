@@ -16,6 +16,8 @@ import { LoginTokenDto } from './dto/login-token.dto';
 import { TokenResponse } from './interfaces/token-response';
 import { RegisterResponse } from './interfaces/register-response';
 import { Public } from './decorators/public.decorator';
+import { AuthUser } from './decorators/user.decorator';
+import { User } from 'src/users/entities/user.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -86,5 +88,11 @@ export class AuthController {
   @HttpCode(204)
   validate(): void {
     // Valida el token
+  }
+
+  @Get('/logout')
+  @HttpCode(204)
+  async logout(@AuthUser() authUser: User): Promise<void> {
+    await this.authService.logout(authUser);
   }
 }

@@ -133,7 +133,7 @@ export class AuthService {
 
     if (tokenDto.firebaseToken) {
       user.firebaseToken = tokenDto.firebaseToken;
-      await this.userRepo.flush();
+      await this.userRepo.getEntityManager().flush();
     }
 
     if (tokenDto.lat && tokenDto.lng) {
@@ -143,5 +143,10 @@ export class AuthService {
     await this.userRepo.getEntityManager().flush();
 
     return this.createToken(user as User);
+  }
+
+  async logout(authUser: User) {
+    authUser.firebaseToken = null;
+    await this.userRepo.getEntityManager().flush();
   }
 }
