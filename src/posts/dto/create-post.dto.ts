@@ -6,6 +6,7 @@ import {
   Allow,
   Min,
   Max,
+  IsNotEmpty,
 } from 'class-validator';
 import { User } from '../../users/entities/user.entity';
 
