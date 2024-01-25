@@ -1,12 +1,11 @@
 import {
-  IsString,
-  ValidateIf,
+  Allow,
   IsNumber,
   IsOptional,
-  Allow,
-  Min,
+  IsString,
   Max,
-  IsNotEmpty,
+  Min,
+  ValidateIf
 } from 'class-validator';
 import { User } from '../../users/entities/user.entity';
 
