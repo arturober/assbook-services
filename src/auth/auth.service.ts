@@ -58,16 +58,17 @@ export class AuthService {
 
   async loginGoogle(tokenDto: LoginTokenDto): Promise<TokenResponse> {
     const client = new OAuth2Client(this.googleId);
+    console.log(this.googleId);
     const ticket = await client.verifyIdToken({
       idToken: tokenDto.token,
       audience: this.googleId,
     });
     const payload = ticket.getPayload();
+    console.log(payload);
     const email = payload.email;
     let user = await this.usersService.getUserbyEmail(email);
 
     if (!user) {
-      console.log(payload);
       const avatar = await this.imageService.downloadImage(
         'users',
         payload.picture,
