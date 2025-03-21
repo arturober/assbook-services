@@ -67,6 +67,7 @@ export class AuthService {
     let user = await this.usersService.getUserbyEmail(email);
 
     if (!user) {
+      console.log(payload);
       const avatar = await this.imageService.downloadImage(
         'users',
         payload.picture,
